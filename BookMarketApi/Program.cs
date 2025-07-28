@@ -34,6 +34,8 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 Encoding.UTF8.GetBytes(jwtKey))
         };
     });
+builder.Services.AddScoped<ICartServiceRepository, CartServiceRepository>();
+
 
 
 builder.Services.AddScoped<IAuthServiceRepository, AuthServiceRepository>();
