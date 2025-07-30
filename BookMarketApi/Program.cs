@@ -2,9 +2,6 @@ using System.Text;
 using BookMarketApi.Data;
 using BookMarketApi.DataAccess.Contracts;
 using BookMarketApi.DataAccess.Repositories;
-using BookMarketApi.Mapping;
-using BookMarketApi.Services;
-using BookMarketApi.Services.IServices;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -14,8 +11,6 @@ var builder = WebApplication.CreateBuilder(args);
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 
 builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseNpgsql(connectionString));
-
-builder.Services.AddAutoMapper(typeof(BookMapperProfile));
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
@@ -42,10 +37,6 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 
 
 builder.Services.AddScoped<IAuthServiceRepository, AuthServiceRepository>();
-
-builder.Services.AddScoped<IOnlineBookRepository, OnlineBookRepository>();
-builder.Services.AddScoped<IOnlineBookService, OnlineBookService>();
-
 
 var app = builder.Build();
 
