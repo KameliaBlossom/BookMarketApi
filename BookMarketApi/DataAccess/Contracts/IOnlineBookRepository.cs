@@ -4,7 +4,7 @@ namespace BookMarketApi.DataAccess.Contracts;
 
 public interface IOnlineBookRepository
 {
-    Task AddAsync(OnlineBook book);
+    Task<OnlineBook> AddAsync(OnlineBook book);
     Task<OnlineBook?> GetByIdAsync(Guid bookId);
     Task<IEnumerable<OnlineBook>> GetAllAsync();
     Task UpdateAsync(OnlineBook book);
