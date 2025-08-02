@@ -14,10 +14,11 @@ public class OnlineBookRepository : IOnlineBookRepository
         _context = context;
     }
     
-    public async Task AddAsync(OnlineBook book)
+    public async Task<OnlineBook> AddAsync(OnlineBook book)
     {
         _context.OnlineBooks.Add(book);
         await _context.SaveChangesAsync();
+        return book;
     }
     
     public async Task<OnlineBook?> GetByIdAsync(Guid bookId)
