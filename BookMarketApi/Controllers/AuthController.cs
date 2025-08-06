@@ -1,20 +1,20 @@
-﻿using BookMarketApi.DataAccess.Contracts;
-using BookMarketApi.Model;
+﻿using BookMarketApi.BLL.Contracts.AuthContracts;
+using BookMarketApi.Common.Entities.DTOs.AuthDTOs;
 using Microsoft.AspNetCore.Mvc;
 
 [ApiController]
 [Route("api/[controller]")]
 public class AuthController : ControllerBase
 {
-    private readonly IAuthServiceRepository _authService;
+    private readonly IAuthContract _authService;
 
-    public AuthController(IAuthServiceRepository authService)
+    public AuthController(IAuthContract authService)
     {
         _authService = authService;
     }
 
     [HttpPost("register")]
-    public async Task<ActionResult<AuthResponse>> Register(UserRegistration model)
+    public async Task<ActionResult<AuthResponseDto>> Register(UserRegistrationDto model)
     {
         try
         {
@@ -28,7 +28,7 @@ public class AuthController : ControllerBase
     }
 
     [HttpPost("login")]
-    public async Task<ActionResult<AuthResponse>> Login(UserLogin model)
+    public async Task<ActionResult<AuthResponseDto>> Login(UserLoginDto model)
     {
         try
         {
