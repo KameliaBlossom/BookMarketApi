@@ -1,5 +1,5 @@
-﻿using BookMarketApi.DTOs;
-using BookMarketApi.Services.IServices;
+﻿using BookMarketApi.BLL.Contracts.OnlineBookContracts;
+using BookMarketApi.Common.Entities.DTOs.OnlineBookDTOs;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -10,18 +10,18 @@ namespace BookMarketApi.Controllers;
 [Route("api/online-book")]
 public class OnlineBookController : ControllerBase
 {
-    private readonly IOnlineBookService _bookService;
+    private readonly IOnlineBookContract _bookService;
     
-    public OnlineBookController(IOnlineBookService bookService)
+    public OnlineBookController(IOnlineBookContract bookService)
     {
         _bookService = bookService;
     }
 
     [HttpPost]
     [Authorize]
-    [ProducesResponseType(typeof(OnlineBookDetailDTO), StatusCodes.Status201Created)]
+    [ProducesResponseType(typeof(OnlineBookDetailDto), StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    public async Task<IActionResult> CreateBook([FromBody] CreateOnlineBookDTO createDto)
+    public async Task<IActionResult> CreateBook([FromBody] CreateOnlineBookDto createDto)
     {
         if (!ModelState.IsValid)
         {
@@ -34,7 +34,7 @@ public class OnlineBookController : ControllerBase
     }
 
     [HttpGet("{id:guid}")]
-    [ProducesResponseType(typeof(OnlineBookDetailDTO), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(OnlineBookDetailDto), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<IActionResult> GetBookById(Guid id)
     {
@@ -44,7 +44,7 @@ public class OnlineBookController : ControllerBase
     }
 
     [HttpGet]
-    [ProducesResponseType(typeof(IEnumerable<OnlineBookShortDTO>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(IEnumerable<OnlineBookShortDto>), StatusCodes.Status200OK)]
     public async Task<IActionResult> GetAllBooks()
     {
         var books = await _bookService.GetAllBooksAsync();
@@ -53,11 +53,11 @@ public class OnlineBookController : ControllerBase
 
     [HttpPut("{id:guid}")]
     [Authorize]
-    [ProducesResponseType(typeof(OnlineBookDetailDTO), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(OnlineBookDetailDto), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-    public async Task<IActionResult> UpdateBook(Guid id, [FromBody] UpdateOnlineBookDTO updateDto)
+    public async Task<IActionResult> UpdateBook(Guid id, [FromBody] UpdateOnlineBookDto updateDto)
     {
         if (!ModelState.IsValid)
         {

@@ -1,7 +1,8 @@
 ﻿
-using BookMarketApi.DataAccess.Contracts;
+using BookMarketApi.BLL.Contracts.CartContracts;
+using BookMarketApi.Common.Entities.Domain.CartEntities;
+using BookMarketApi.Common.Entities.Domain.OrderEntities;
 using BookMarketApi.Extension;
-using BookMarketApi.Model;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -12,9 +13,9 @@ namespace BookMarketApi.Controllers;
 [Authorize]
 public class CartController : ControllerBase
 {
-    private readonly ICartServiceRepository _cartService;
+    private readonly ICartContract _cartService;
 
-    public CartController(ICartServiceRepository cartService)
+    public CartController(ICartContract cartService)
     {
         _cartService = cartService;
     }
