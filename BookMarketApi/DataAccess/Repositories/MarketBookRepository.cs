@@ -7,17 +7,18 @@ namespace BookMarketApi.DataAccess.Repositories;
 
 public class MarketBookRepository : IMarketBookRepository
 {
-    public readonly ApplicationDbContext _context;
+    private readonly ApplicationDbContext _context;
 
     public MarketBookRepository(ApplicationDbContext context)
     {
         _context = context;
     }
 
-    public async Task AddAsync(MarketBook book)
+    public async Task<MarketBook> AddAsync(MarketBook book)
     {
         _context.MarketBooks.Add(book);
         await _context.SaveChangesAsync();
+        return book;
     }
 
     public async Task<MarketBook?> GetByIdAsync(Guid bookId)
