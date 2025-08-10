@@ -21,13 +21,9 @@ public class OnlineBookController : ControllerBase
     [Authorize]
     [ProducesResponseType(typeof(OnlineBookDetailDTO), StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     public async Task<IActionResult> CreateBook([FromBody] CreateOnlineBookDTO createDto)
     {
-        if (!ModelState.IsValid)
-        {
-            return BadRequest(ModelState);
-        }
-        
         var createdBook = await _bookService.CreateBookAsync(createDto);
 
         return CreatedAtAction(nameof(GetBookById), new { id = createdBook.Id }, createdBook);
@@ -59,10 +55,6 @@ public class OnlineBookController : ControllerBase
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     public async Task<IActionResult> UpdateBook(Guid id, [FromBody] UpdateOnlineBookDTO updateDto)
     {
-        if (!ModelState.IsValid)
-        {
-            return BadRequest(ModelState);
-        }
         
         var updatedBook = await _bookService.UpdateAsync(id, updateDto);
         
@@ -71,7 +63,7 @@ public class OnlineBookController : ControllerBase
 
     [HttpDelete("{id:guid}")]
     [Authorize]
-    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     public async Task<IActionResult> DeleteBook(Guid id)
