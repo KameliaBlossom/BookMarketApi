@@ -1,10 +1,18 @@
 using System.Text;
-using BookMarketApi.Data;
-using BookMarketApi.DataAccess.Contracts;
-using BookMarketApi.DataAccess.Repositories;
-using BookMarketApi.Mapping;
-using BookMarketApi.Services;
-using BookMarketApi.Services.IServices;
+using BookMarketApi.BLL.Contracts.AuthContracts;
+using BookMarketApi.BLL.Contracts.CartContracts;
+using BookMarketApi.BLL.Contracts.OnlineBookContracts;
+using BookMarketApi.BLL.Logic.AuthImplementations;
+using BookMarketApi.BLL.Logic.CartImplementations;
+using BookMarketApi.BLL.Logic.OnlineBookImplementations;
+using BookMarketApi.Common.Automapper.AutoMapperConfig;
+using BookMarketApi.DAL.Contracts.AuthContracts;
+using BookMarketApi.DAL.Contracts.CartContracts;
+using BookMarketApi.DAL.Contracts.OnlineBookContracts;
+using BookMarketApi.DAL.Repositories;
+using BookMarketApi.DAL.Repositories.AuthImplementations;
+using BookMarketApi.DAL.Repositories.CartImplementations;
+using BookMarketApi.DAL.Repositories.OnlineBookImplementations;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -16,6 +24,7 @@ var connectionString = builder.Configuration.GetConnectionString("DefaultConnect
 builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseNpgsql(connectionString));
 
 builder.Services.AddAutoMapper(typeof(BookMapperProfile));
+builder.Services.AddAutoMapper(typeof(CartMapperProfile));
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
@@ -26,7 +35,8 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
     {
         var jwtKey = builder.Configuration["Jwt:Key"];
-        
+        Console.WriteLine($"Key: '{jwtKey}', Length: {jwtKey.Length}, ByteCount: {Encoding.UTF8.GetBytes(jwtKey).Length}");
+
         options.TokenValidationParameters = new TokenValidationParameters
         {
             ValidateIssuer = true,
@@ -39,14 +49,14 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 Encoding.UTF8.GetBytes(jwtKey))
         };
     });
-builder.Services.AddScoped<ICartServiceRepository, CartServiceRepository>();
+builder.Services.AddScoped<ICartContract, CartImplementation>();
+builder.Services.AddScoped<ICartRepository, CartRepository>();
 
-
-
-builder.Services.AddScoped<IAuthServiceRepository, AuthServiceRepository>();
+builder.Services.AddScoped<IAuthContract, AuthImplementation>();
+builder.Services.AddScoped<IAuthRepository, AuthRepository>();
 
 builder.Services.AddScoped<IOnlineBookRepository, OnlineBookRepository>();
-builder.Services.AddScoped<IOnlineBookService, OnlineBookService>();
+builder.Services.AddScoped<IOnlineBookContract, OnlineBookImplementation>();
 
 
 var app = builder.Build();

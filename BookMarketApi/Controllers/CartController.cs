@@ -1,9 +1,13 @@
 ﻿
-using BookMarketApi.DataAccess.Contracts;
+using AutoMapper;
+using BookMarketApi.BLL.Contracts.CartContracts;
+using BookMarketApi.Common.Entities.Domain.CartEntities;
+using BookMarketApi.Common.Entities.Domain.OrderEntities;
 using BookMarketApi.Extension;
-using BookMarketApi.Model;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using BookMarketApi.Common.Entities.OutputModels.CartOutputModels;
+
 
 namespace BookMarketApi.Controllers;
 
@@ -12,11 +16,13 @@ namespace BookMarketApi.Controllers;
 [Authorize]
 public class CartController : ControllerBase
 {
-    private readonly ICartServiceRepository _cartService;
+    private readonly ICartContract _cartService;
+    private readonly IMapper _mapper;
 
-    public CartController(ICartServiceRepository cartService)
+    public CartController(ICartContract? cartService, IMapper mapper)
     {
         _cartService = cartService;
+        _mapper = mapper;
     }
 
     [HttpGet]
@@ -24,7 +30,7 @@ public class CartController : ControllerBase
     {
         var userId = User.GetUserId();
         var cart = await _cartService.GetCartAsync(userId);
-        return Ok(cart);
+        return Ok(_mapper.Map<CartOutputModel>(cart));
     }
 
     [HttpPost("items")]

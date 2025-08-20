@@ -1,0 +1,24 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net9.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\BookMarketApi.BLL.Contracts\BookMarketApi.BLL.Contracts.csproj" />
+      <ProjectReference Include="..\BookMarketApi.Common.AutoMapper\BookMarketApi.Common.AutoMapper.csproj" />
+      <ProjectReference Include="..\BookMarketApi.Common.Entities\BookMarketApi.Common.Entities.csproj" />
+      <ProjectReference Include="..\BookMarketApi.Common.Validators\BookMarketApi.Common.Validators.csproj" />
+      <ProjectReference Include="..\BookMarketApi.DAL.Contracts\BookMarketApi.DAL.Contracts.csproj" />
+      <ProjectReference Include="..\BookMarketApi.DAL.Repositories\BookMarketApi.DAL.Repositories.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="BCrypt.Net-Next" Version="4.0.3" />
+      <PackageReference Include="Microsoft.IdentityModel.Tokens" Version="8.0.1" />
+      <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="8.0.1" />
+    </ItemGroup>
+
+</Project>

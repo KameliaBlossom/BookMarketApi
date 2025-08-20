@@ -1,0 +1,15 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net9.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\BookMarketApi.Common.AutoMapper\BookMarketApi.Common.AutoMapper.csproj" />
+      <ProjectReference Include="..\BookMarketApi.Common.Entities\BookMarketApi.Common.Entities.csproj" />
+      <ProjectReference Include="..\BookMarketApi.Common.Validators\BookMarketApi.Common.Validators.csproj" />
+    </ItemGroup>
+
+</Project>
