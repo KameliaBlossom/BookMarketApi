@@ -13,7 +13,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace BookMarketApi.DAL.Repositories.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250806164515_InitialCreate")]
+    [Migration("20250813150923_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />

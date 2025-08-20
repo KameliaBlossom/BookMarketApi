@@ -1,6 +1,6 @@
-﻿namespace BookMarketApi.Common.Entities.DTOs.AuthDTOs;
+﻿namespace BookMarketApi.Common.Entities.InputModels.UserInputModels;
 
-public class UserRegistrationDto
+public class UserRegistrationModel
 {
     public string Username { get; set; }
     public string Email { get; set; }

@@ -1,6 +1,7 @@
 ﻿using BookMarketApi.BLL.Contracts.CartContracts;
 using BookMarketApi.Common.Entities.Domain.CartEntities;
 using BookMarketApi.Common.Entities.Domain.OrderEntities;
+using BookMarketApi.Common.Entities.OutputModels.CartOutputModels;
 using BookMarketApi.DAL.Contracts.CartContracts;
 using BookMarketApi.Extension;
 
@@ -11,28 +12,53 @@ public class CartImplementation : ICartContract
     private readonly ICartRepository _repository;
     public CartImplementation(ICartRepository repository) => _repository = repository;
 
-    public async Task<Cart> GetCartAsync(Guid userId)
+    public async Task<CartOutputModel?> GetCartAsync(Guid userId)
     {
-        var cart = await _repository.GetCartByUserIdAsync(userId);
-        if (cart == null)
+        if (userId == Guid.Empty) // ADDED: валидация входного параметра
+            throw new ArgumentException("Некорректный идентификатор пользователя", nameof(userId));
+        
+        var model = await _repository.GetCartByUserIdAsync(userId); // CHANGED: используем уже полученную модель
+        if (model != null && model.Items != null && model.Items.Any())
+            return model;
+
+
+        var cartEntity = await _repository.GetCartEntityByUserIdAsync(userId); // ADDED: получаем доменную сущность корзины
+        if (cartEntity == null) // ADDED: создаём корзину, если отсутствует
         {
-            cart = new Cart { UserId = userId };
-            await _repository.AddCartAsync(cart);
-            cart = await _repository.GetCartByUserIdAsync(userId);
+            cartEntity = new Cart
+            {
+                UserId = userId,
+                Items = new List<CartItem>(),
+                CreatedAt = DateTime.UtcNow,
+                UpdatedAt = DateTime.UtcNow
+            };
+            await _repository.AddCartAsync(cartEntity);
         }
-        return cart;
+
+        return await _repository.GetCartByUserIdAsync(userId); // CHANGED: единичный повторный запрос после возможного создания
+
     }
 
     public async Task<Cart> GetOrCreateCartAsync(Guid userId)
     {
-        var cart = await _repository.GetCartByUserIdAsync(userId);
-        if (cart == null)
+        if (userId == Guid.Empty) // ADDED: валидация входного параметра
+            throw new ArgumentException("Некорректный идентификатор пользователя", nameof(userId));
+
+        var cart = await _repository.GetCartEntityByUserIdAsync(userId); // CHANGED: берём доменную сущность, а не output-модель
+        if (cart != null)
+            return cart;
+
+        cart = new Cart // CHANGED: гарантируем инициализацию Items и временных меток
         {
-            cart = new Cart { UserId = userId };
-            await _repository.AddCartAsync(cart);
-        }
+            UserId = userId,
+            Items = new List<CartItem>(),
+            CreatedAt = DateTime.UtcNow,
+            UpdatedAt = DateTime.UtcNow
+        };
+        await _repository.AddCartAsync(cart);
         return cart;
     }
+
 
     public async Task<CartItem> AddToCartAsync(Guid userId, Guid bookId, int quantity)
     {

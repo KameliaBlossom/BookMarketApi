@@ -24,6 +24,7 @@ var connectionString = builder.Configuration.GetConnectionString("DefaultConnect
 builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseNpgsql(connectionString));
 
 builder.Services.AddAutoMapper(typeof(BookMapperProfile));
+builder.Services.AddAutoMapper(typeof(CartMapperProfile));
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
@@ -34,7 +35,8 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
     {
         var jwtKey = builder.Configuration["Jwt:Key"];
-        
+        Console.WriteLine($"Key: '{jwtKey}', Length: {jwtKey.Length}, ByteCount: {Encoding.UTF8.GetBytes(jwtKey).Length}");
+
         options.TokenValidationParameters = new TokenValidationParameters
         {
             ValidateIssuer = true,

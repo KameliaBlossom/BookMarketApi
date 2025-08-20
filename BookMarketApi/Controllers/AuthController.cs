@@ -1,6 +1,9 @@
 ﻿using BookMarketApi.BLL.Contracts.AuthContracts;
 using BookMarketApi.Common.Entities.DTOs.AuthDTOs;
+using BookMarketApi.Common.Entities.InputModels.UserInputModels;
 using Microsoft.AspNetCore.Mvc;
+
+namespace BookMarketApi.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
@@ -14,7 +17,7 @@ public class AuthController : ControllerBase
     }
 
     [HttpPost("register")]
-    public async Task<ActionResult<AuthResponseDto>> Register(UserRegistrationDto model)
+    public async Task<ActionResult<AuthResponseDto>> Register(UserRegistrationModel model)
     {
         try
         {
@@ -28,7 +31,7 @@ public class AuthController : ControllerBase
     }
 
     [HttpPost("login")]
-    public async Task<ActionResult<AuthResponseDto>> Login(UserLoginDto model)
+    public async Task<ActionResult<AuthResponseDto>> Login(UserLoginModel model)
     {
         try
         {

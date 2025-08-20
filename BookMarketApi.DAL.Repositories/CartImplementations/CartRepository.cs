@@ -1,6 +1,7 @@
 ﻿using BookMarketApi.Common.Entities.Domain.BookEntities;
 using BookMarketApi.Common.Entities.Domain.CartEntities;
 using BookMarketApi.Common.Entities.Domain.OrderEntities;
+using BookMarketApi.Common.Entities.OutputModels.CartOutputModels;
 using BookMarketApi.DAL.Contracts.CartContracts;
 using Microsoft.EntityFrameworkCore;
 
@@ -11,9 +12,24 @@ public class CartRepository : ICartRepository
     private readonly ApplicationDbContext _context;
     public CartRepository(ApplicationDbContext context) => _context = context;
 
-    public async Task<Cart?> GetCartByUserIdAsync(Guid userId)
-        => await _context.Carts.Include(c => c.Items).ThenInclude(i => i.Book)
+    public async Task<CartOutputModel?> GetCartByUserIdAsync(Guid userId)
+    {
+        var outputModel = new CartOutputModel();
+        var cart = await _context.Carts.FirstOrDefaultAsync(c => c.UserId == userId);
+        if (cart == null)
+            return outputModel;
+        outputModel.Items = cart.Items;
+        return outputModel;
+    }
+    
+    public async Task<Cart?> GetCartEntityByUserIdAsync(Guid userId)
+    {
+        return await _context.Carts
+            .Include(c => c.Items)
+            .ThenInclude(i => i.Book)
             .FirstOrDefaultAsync(c => c.UserId == userId);
+    }
+
     public async Task AddCartAsync(Cart cart)
     {
         _context.Carts.Add(cart);

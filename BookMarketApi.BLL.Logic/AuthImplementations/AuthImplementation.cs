@@ -2,8 +2,10 @@
 using BookMarketApi.Common.Entities.Domain.UserEntities;
 using BookMarketApi.DAL.Contracts.AuthContracts;
 using System.IdentityModel.Tokens.Jwt;
+using System.Text;
 using BookMarketApi.BLL.Contracts.AuthContracts;
 using BookMarketApi.Common.Entities.DTOs.AuthDTOs;
+using BookMarketApi.Common.Entities.InputModels.UserInputModels;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.Extensions.Configuration;
 
@@ -21,7 +23,7 @@ namespace BookMarketApi.BLL.Logic.AuthImplementations;
             _configuration = configuration;
         }
 
-        public async Task<AuthResponseDto> Register(UserRegistrationDto model)
+        public async Task<AuthResponseDto> Register(UserRegistrationModel model)
         {
             if (await _authRepository.UserExistsByEmailAsync(model.Email))
                 throw new Exception("Пользователь с таким email уже существует");
@@ -47,7 +49,7 @@ namespace BookMarketApi.BLL.Logic.AuthImplementations;
             };
         }
 
-        public async Task<AuthResponseDto> Login(UserLoginDto model)
+        public async Task<AuthResponseDto> Login(UserLoginModel model)
         {
             var user = await _authRepository.GetUserByEmailAsync(model.Email);
 
@@ -63,10 +65,10 @@ namespace BookMarketApi.BLL.Logic.AuthImplementations;
 
         private string GenerateJwtToken(User user)
         {
-            var base64Key = _configuration["Jwt:Key"];
-            var keyBytes = Convert.FromBase64String(base64Key);
-            var key = new SymmetricSecurityKey(keyBytes);
-            var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+            var key = _configuration["Jwt:Key"];
+            var keyBytes = Encoding.UTF8.GetBytes(key);
+            var securityKey = new SymmetricSecurityKey(keyBytes);
+            var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
             
             var claims = new[]
             {
